@@ -1,0 +1,105 @@
+<!-- upload.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Page</title>
+    <style>
+        body {
+            background-color: #000; /* Black background color */
+            color: #4AF626; /* Foreground color */
+            padding-top: 50px; /* Add some space at the top */
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .upload-button {
+            background-color: #4AF626; /* Button background color */
+            color: #000; /* Button foreground color */
+            padding: 10px;
+            text-decoration: none; /* Remove underlines from the link */
+            border-radius: 5px; /* Add rounded corners to the button */
+            display: inline-block;
+            margin-top: 20px;
+            cursor: pointer; /* Add cursor pointer for better UX */
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        label {
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px;
+            background-color: #4AF626; /* Button background color */
+            color: #000; /* Button foreground color */
+            border-radius: 5px; /* Add rounded corners to the button */
+            margin-top: 20px;
+        }
+         #notification {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px;
+            background-color: #4AF626;
+            color: #000;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload</h1>
+    <label for="file-input" class="upload-button"><B>Choose a file</B></label>
+    <input type="file" name="file" id="file-input" style="display: none;" onchange="uploadFile(this)">
+    <div id="notification"></div>
+    <script>
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.innerText = message;
+            notification.style.display = 'block';
+
+            setTimeout(function() {
+                notification.style.display = 'none';
+            }, 2000);
+        }
+
+        function uploadFile(input) {
+            const fileInput = input;
+            const file = fileInput.files[0];
+
+            if (file) {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                fetch('{% url "upload" %}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',  // Include CSRF token for security
+                    },
+                }).then(response => {
+                    if (response.ok) {
+                        showNotification('File uploaded successfully! Redirecting to index...');
+                        
+                        // Wait for 2 seconds (2000 milliseconds) before redirecting
+                        setTimeout(function() {
+                            window.location.href = '{% url "index" %}';  // Redirect to the index page
+                        }, 2000);
+                    } else {
+                        showNotification('File upload failed.');
+                    }
+                }).catch(error => {
+                    console.error('Error during file upload:', error);
+                    showNotification('File upload failed.');
+                });
+            }
+        }
+    </script>
+</body>
+</html>

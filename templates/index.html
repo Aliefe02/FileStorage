@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Files List</title>
+    <style>
+        body {
+            background-color: #000; /* Black background color */
+            color: #4AF626; /* Foreground color */
+            padding-top: 20px; /* Add some space at the top */
+            position: relative;
+            font-family: 'Arial', sans-serif; /* Change the font family */
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        ul {
+            list-style-type: none; /* Remove default list styling */
+            padding: 0;
+            text-align: center;
+        }
+
+        li {
+            margin: 5px 0; /* Add some spacing between list items */
+            position: relative;
+        }
+
+        li::before {
+            content: '\2022'; /* Unicode character for a bullet point */
+            color: inherit; /* Inherit color from the parent (foreground color) */
+            font-size: 1.5em; /* Adjust the size of the bullet point */
+            margin-right: 5px; /* Add some spacing between the bullet point and text */
+            position: absolute;
+            left: -1.5em; /* Adjust the position of the bullet point */
+        }
+
+        .upload-button {
+            position: absolute;
+            top: 10px; /* Adjust the top position of the button */
+            right: 10px; /* Adjust the right position of the button */
+            background-color: #4AF626; /* Button background color */
+            color: #000; /* Button foreground color */
+            padding: 10px;
+            text-decoration: none; /* Remove underlines from the link */
+            border-radius: 5px; /* Add rounded corners to the button */
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'uploadPage' %}" class="upload-button"><B>Upload Page</B></a>
+    <h1>Files List</h1>
+    <ul>
+        {% for file_name in files_list %}
+            <li>- {{ file_name }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
